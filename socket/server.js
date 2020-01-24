@@ -28,7 +28,7 @@ function retrieveNodes() {
     } else {
       body = JSON.parse(body);
       body["hydra:member"].forEach((function(opening){
-        openingStatus.set(opening.adress64, opening.opened)
+        openingStatus.set(opening.adress64, [opening.id, opening.opened])
       }));
     }
     console.log(`Succesffuly load ${openingStatus.size} node(s).`)
@@ -49,10 +49,6 @@ function registrationSettings(address) {
 
   console.log("Registration commands sent successfully");
 
-  // Registration of the new node
-  openingStatus.set(address, !openingStatus.get(address))
-
-  console.log(address);
   // Send the new opening to api
   request.post('https://localhost:8443/openings', {
     json: {
@@ -65,8 +61,10 @@ function registrationSettings(address) {
       console.error(error)
       return
     }
+    //Registration of the new node
+    openingStatus.set(address, [body.id, address])
 
-    console.log('This node has been registered')
+    console.log('This node has been registered: ' + address)
   })
 
 }
@@ -91,7 +89,6 @@ serialport.on("open", function () {
   xbeeAPI.builder.write(frame_obj);
 
 });
-
 
 // All frames parsed by the XBee will be emitted here
 
@@ -121,9 +118,9 @@ xbeeAPI.parser.on("data", function (frame) {
 
     // Test if this opening is registered. If not, register it in open state
     if (openingStatus.has(frame.remote64)) {
-      openingStatus.set(frame.remote64, !openingStatus.get(frame.remote64))
+      openingStatus.set(frame.remote64, [openingStatus.get(frame.remote64)[0], !openingStatus.get(frame.remote64)[1]])
     } else {
-      registrationSettings(frame.remote64);
+       registrationSettings(frame.remote64);
     }
 
 
