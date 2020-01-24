@@ -6,11 +6,13 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * This is a heating/cooling element.
  * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\HeaterRepository")
+ * @UniqueEntity("adress64")
  */
 class Heater
 {
@@ -32,6 +34,12 @@ class Heater
      * @ORM\Column(type="string", length=30)
      */
     private $adress64;
+
+    /**
+     * The status of the Heater. true: the Heater is on, false: the Heater is off.
+     * @ORM\Column(type="boolean")
+     */
+    private $statusOn;
 
     public function __construct()
     {
@@ -63,6 +71,18 @@ class Heater
     public function setAdress64(string $adress64): self
     {
         $this->adress64 = $adress64;
+
+        return $this;
+    }
+
+    public function getStatusOn(): ?bool
+    {
+        return $this->statusOn;
+    }
+
+    public function setStatusOn(bool $statusOn): self
+    {
+        $this->statusOn = $statusOn;
 
         return $this;
     }
