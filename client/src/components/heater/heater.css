@@ -29,16 +29,11 @@
 }
 
 .pop-up-connection{
-    width:30%;
-    position:fixed;
-    top:0;
-    left:75%;
-    background-color:#ffffff;
+       background-color:#ffffff;
     right:0;
     display:block;
     border:1px solid #000000;
     padding:1% 10% 1% 10%;
-    display:none;
 
 }
 .create{

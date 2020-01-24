@@ -61,7 +61,7 @@ class List extends Component {
             <Link to="create" className="btn btn-primary">
                 Ajouter
             </Link>
-            <Link className="add_button btn  btn-danger">
+            <Link className="add-btn btn  btn-danger">
                 Supprimer
             </Link>
         </p>
