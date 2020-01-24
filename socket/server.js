@@ -10,7 +10,7 @@ var xbeeAPI = new xbee_api.XBeeAPI({
   api_mode: 2
 });
 
-let serialport = new SerialPort("COM4", {
+let serialport = new SerialPort("COM3", {
   baudRate: 9600,
 }, function (err) {
   if (err) {
@@ -21,8 +21,21 @@ let serialport = new SerialPort("COM4", {
 serialport.pipe(xbeeAPI.parser);
 xbeeAPI.builder.pipe(serialport);
 
-function registrationSettings(address) {
+function retrieveNodes() {
+  request('https://localhost:8443/openings', function (error, response, body) {
+    if (error) {
+      console.log("Can't retrieve openings")
+    } else {
+      body = JSON.parse(body);
+      body["hydra:member"].forEach((function(opening){
+        openingStatus.set(opening.adress64, opening.opened)
+      }));
+    }
+    console.log(`Succesffuly load ${openingStatus.size} node(s).`)
+  });
+}
 
+function registrationSettings(address) {
   console.log(`REGISTRATION - A new node have been identified`)
 
   var frameJoinNotif = {
@@ -57,6 +70,8 @@ function registrationSettings(address) {
   })
 
 }
+
+retrieveNodes();
 
 serialport.on("open", function () {
   var frame_obj = { // AT Request to be sent
