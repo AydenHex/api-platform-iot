@@ -22,17 +22,23 @@ serialport.pipe(xbeeAPI.parser);
 xbeeAPI.builder.pipe(serialport);
 
 function retrieveNodes() {
-  request('https://localhost:8443/openings', function (error, response, body) {
+  var req = {
+    uri: 'https://localhost:8443/openings',
+    method: 'GET'
+  }
+  request(req, callback)
+  function callback(error, response, body) {
     if (error) {
-      console.log("Can't retrieve openings")
+      console.log(`Can't retrieve nodes from the db : ${error}`)
     } else {
       body = JSON.parse(body);
       body["hydra:member"].forEach((function(opening){
         openingStatus.set(opening.adress64, [opening.id, opening.opened])
       }));
+      console.log(`Succesffuly load ${openingStatus.size} node(s).`)
     }
-    console.log(`Succesffuly load ${openingStatus.size} node(s).`)
-  });
+  }
+
 }
 
 function changeState(address) {
@@ -52,7 +58,13 @@ function changeState(address) {
 
   request(req,callback);
   function callback(error, response, body) {
-    console.log(error);
+    if (error) {
+      console.log(`Can't change state of the opening : ${error}`)
+      return
+    } else {
+      openingStatus.set(address, [body.id, body.opened])
+      console.log(`Status changed successfuly for the opening ${address}`)
+    }
   }
 }
 
@@ -71,26 +83,34 @@ function registrationSettings(address, basic) {
   console.log("Registration commands sent successfully");
 
   // Send the new opening to api
-  request.post('https://localhost:8443/openings', {
-    json: {
+  var req = {
+    uri: 'https://localhost:8443/openings',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: {
       name: "ouverture_1_test",
       adress64: address,
-      opened: false if basic else true
-    }
-  }, (error, res, body) => {
+      opened: basic ? false : true,
+    },
+    json: true
+  };
+  request(req, callback)
+  function callback(error, response, body) {
     if (error) {
       console.error(error)
       return
     }
     //Registration of the new node
-    openingStatus.set(address, [body.id, false])
+    openingStatus.set(address, [body.id, basic ? false : true])
 
-    if(res.code === 409) {
+    if(response.code === 409) {
       console.log("Can't register an opening twice")
       return
     }
     console.log('This node has been registered: ' + address)
-  })
+  }
 
 }
 
@@ -143,7 +163,6 @@ xbeeAPI.parser.on("data", function (frame) {
 
     // Test if this opening is registered. If not, register it in open state
     if (openingStatus.has(frame.remote64)) {
-      openingStatus.set(frame.remote64, [openingStatus.get(frame.remote64)[0], !openingStatus.get(frame.remote64)[1]])
       changeState(frame.remote64)
     } else {
        registrationSettings(frame.remote64, false);
