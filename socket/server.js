@@ -21,6 +21,10 @@ let serialport = new SerialPort("COM3", {
 serialport.pipe(xbeeAPI.parser);
 xbeeAPI.builder.pipe(serialport);
 
+/**
+ * Allow to retrieve nodes (openings) from the db
+ * Called when the script starts
+ */
 function retrieveNodes() {
   var req = {
     uri: 'https://localhost:8443/openings',
@@ -41,6 +45,10 @@ function retrieveNodes() {
 
 }
 
+/**
+ * Allows to change the state of an opening on the db
+ * @param address
+ */
 function changeState(address) {
   opening = openingStatus.get(address)
 
@@ -68,6 +76,11 @@ function changeState(address) {
   }
 }
 
+/**
+ * Allow to register an opening on the db
+ * @param address
+ * @param basic -> True if the node has been registed thanks to Join Notification
+ */
 function registrationSettings(address, basic) {
   console.log(`REGISTRATION - A new node have been identified`)
 
