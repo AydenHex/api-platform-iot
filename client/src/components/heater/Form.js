@@ -48,16 +48,16 @@ class Form extends Component {
           component={this.renderField}
           name="name"
           type="text"
-          size="5"
+          size="15"
           placeholder="Nom du chauffage"
         />
         <br/>
         <Field
           component={this.renderField}
-          name="adresse MAC"
+          name="adress64"
           type="text"
-          size="5"
-          placeholder="Adresse MAC"
+          size="35"
+          placeholder="Adresse 64"
         />
 
         <button type="submit" className="btn btn-success">

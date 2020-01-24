@@ -70,7 +70,8 @@ class List extends Component {
                         <tr>
                             <th>id</th>
                             <th>name</th>
-                            <th>adresse MAC</th>
+                            <th>adresse 64</th>
+                            <th>status</th>
                             <th colSpan={2} />
                         </tr>
                         </thead>
@@ -85,6 +86,7 @@ class List extends Component {
                                 </th>
                                 <td>{item['name']}</td>
                                 <td>{item['adress64']}</td>
+                                <td>{item['opened'] ? "ouvert": "fermer"}</td>
                                 <td>
                                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
                                         <span className="fa fa-search" aria-hidden="true" />
