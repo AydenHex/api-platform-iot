@@ -10,7 +10,7 @@ var xbeeAPI = new xbee_api.XBeeAPI({
   api_mode: 2
 });
 
-let serialport = new SerialPort("COM4", {
+let serialport = new SerialPort("COM3", {
   baudRate: 9600,
 }, function (err) {
   if (err) {
@@ -102,7 +102,7 @@ xbeeAPI.parser.on("data", function (frame) {
 
   } else if (C.FRAME_TYPE.ZIGBEE_IO_DATA_SAMPLE_RX === frame.type) {
 
-    console.log(`EVENT - The opening status ${frame.sender16} has changed`)
+    console.log(`EVENT - The opening status ${frame.remote64} has changed`)
 
     // Test if this opening is registered. If not, register it in open state
     if (openingStatus.has(frame.remote64)) {
