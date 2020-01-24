@@ -35,7 +35,28 @@ function retrieveNodes() {
   });
 }
 
-function registrationSettings(address) {
+function changeState(address) {
+  opening = openingStatus.get(address)
+
+  var req = {
+    uri: 'https://localhost:8443/openings/' + opening[0],
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/merge-patch+json'
+    },
+    body: {
+      opened: !opening[1],
+    },
+    json: true
+  };
+
+  request(req,callback);
+  function callback(error, response, body) {
+    console.log(error);
+  }
+}
+
+function registrationSettings(address, basic) {
   console.log(`REGISTRATION - A new node have been identified`)
 
   var frameJoinNotif = {
@@ -54,7 +75,7 @@ function registrationSettings(address) {
     json: {
       name: "ouverture_1_test",
       adress64: address,
-      opened: false,
+      opened: false if basic else true
     }
   }, (error, res, body) => {
     if (error) {
@@ -62,8 +83,12 @@ function registrationSettings(address) {
       return
     }
     //Registration of the new node
-    openingStatus.set(address, [body.id, address])
+    openingStatus.set(address, [body.id, false])
 
+    if(res.code === 409) {
+      console.log("Can't register an opening twice")
+      return
+    }
     console.log('This node has been registered: ' + address)
   })
 
@@ -110,7 +135,7 @@ xbeeAPI.parser.on("data", function (frame) {
   }
 
   if (C.FRAME_TYPE.NODE_IDENTIFICATION === frame.type) {
-    registrationSettings(frame.sender64);
+    registrationSettings(frame.sender64, true);
 
   } else if (C.FRAME_TYPE.ZIGBEE_IO_DATA_SAMPLE_RX === frame.type) {
 
@@ -119,8 +144,9 @@ xbeeAPI.parser.on("data", function (frame) {
     // Test if this opening is registered. If not, register it in open state
     if (openingStatus.has(frame.remote64)) {
       openingStatus.set(frame.remote64, [openingStatus.get(frame.remote64)[0], !openingStatus.get(frame.remote64)[1]])
+      changeState(frame.remote64)
     } else {
-       registrationSettings(frame.remote64);
+       registrationSettings(frame.remote64, false);
     }
 
 
