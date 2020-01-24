@@ -4,6 +4,7 @@ import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { retrieve, reset } from '../../actions/opening/show';
 import { del } from '../../actions/opening/delete';
+import './opening.css'
 
 class Show extends Component {
   static propTypes = {
@@ -38,12 +39,12 @@ class Show extends Component {
     const item = this.props.retrieved;
 
     return (
-      <div>
+      <div className="all">
         <h1>Show {item && item['@id']}</h1>
 
         {this.props.loading && (
           <div className="alert alert-info" role="status">
-            Loading...
+            Chargement...
           </div>
         )}
         {this.props.error && (
@@ -60,7 +61,7 @@ class Show extends Component {
         )}
 
         {item && (
-          <table className="table table-responsive table-striped table-hover">
+          <table className="heater_table table table-responsive table-striped table-hover">
             <thead>
               <tr>
                 <th>Field</th>
@@ -78,7 +79,7 @@ class Show extends Component {
               </tr>
               <tr>
                 <th scope="row">opened</th>
-                <td>{item['opened']}</td>
+                <td>{item['opened'] ? "ouvert": "fermer"}</td>
               </tr>
             </tbody>
           </table>

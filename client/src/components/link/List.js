@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/link/list';
+import './link.css'
 
 class List extends Component {
   static propTypes = {
@@ -37,10 +38,10 @@ class List extends Component {
   render() {
     return (
       <div>
-        <h1>Link List</h1>
+        <h1>Liste des </h1>
 
         {this.props.loading && (
-          <div className="alert alert-info">Loading...</div>
+          <div className="alert alert-info">Chargement..</div>
         )}
         {this.props.deletedItem && (
           <div className="alert alert-success">
@@ -53,7 +54,7 @@ class List extends Component {
 
         <p>
           <Link to="create" className="btn btn-primary">
-            Create
+            Ajouter
           </Link>
         </p>
 

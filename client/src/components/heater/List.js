@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { list, reset } from '../../actions/heater/list';
 import './heater.css';
-import Create from './Create';
+
+
 
 class List extends Component {
   static propTypes = {
@@ -57,10 +58,10 @@ class List extends Component {
 
         <p className="button_action">
             <br/>
-          <Link to="create" className="add-btn btn btn-primary">
-            Ajouter
-          </Link>
-            <Link to="create" className="add_button btn  btn-danger">
+            <Link to="create" className="btn btn-primary">
+                Ajouter
+            </Link>
+            <Link className="add_button btn  btn-danger">
                 Supprimer
             </Link>
         </p>
@@ -88,13 +89,13 @@ class List extends Component {
                   <td>
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-search" aria-hidden="true" />
-                      <span className="sr-only">Show</span>
+                      <span className="sr-only">Afficher</span>
                     </Link>
                   </td>
                   <td>
                     <Link to={`edit/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-pencil" aria-hidden="true" />
-                      <span className="sr-only">Edit</span>
+                      <span className="sr-only">Modifier</span>
                     </Link>
                   </td>
                 </tr>
@@ -104,19 +105,13 @@ class List extends Component {
 
         {this.pagination()}
           </div>
-          {this.connexion()}
+
       </div>
 
 
     );
   }
-    connexion(){
-        return (
-            <div className="pop-up-connection">
-           <Create></Create>
-            </div>
-        );
-    }
+
 
   pagination() {
     const view = this.props.retrieved && this.props.retrieved['hydra:view'];

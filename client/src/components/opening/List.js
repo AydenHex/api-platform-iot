@@ -36,8 +36,9 @@ class List extends Component {
 
   render() {
     return (
-      <div>
-        <h1>Opening List</h1>
+      <div className="all">
+        <h1>Tableau des ouvertures</h1>
+        <br/><br/>
 
         {this.props.loading && (
           <div className="alert alert-info">Loading...</div>
@@ -52,12 +53,13 @@ class List extends Component {
         )}
 
         <p>
-          <Link to="create" className="btn btn-primary">
-            Create
+          <Link to="create" className="boutton_action btn btn-primary">
+            Ajouter une ouverture
           </Link>
+          <br/><br/>
         </p>
 
-        <table className="table table-responsive table-striped table-hover">
+        <table className="heater_table table table-responsive table-striped table-hover">
           <thead>
             <tr>
               <th>id</th>
@@ -78,7 +80,7 @@ class List extends Component {
                   </th>
                   <td>{item['name']}</td>
                   <td>{item['adress64']}</td>
-                  <td>{item['opened']}</td>
+                  <td>{item['opened'] ? "ouvert": "fermer"}</td>
                   <td>
                     <Link to={`show/${encodeURIComponent(item['@id'])}`}>
                       <span className="fa fa-search" aria-hidden="true" />

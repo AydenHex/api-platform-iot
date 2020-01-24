@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import Form from './Form';
 import { create, reset } from '../../actions/heater/create';
 
+import './heater.css';
+
 class Create extends Component {
   static propTypes = {
     error: PropTypes.string,
